@@ -2,7 +2,7 @@ import streamlit as st
 
 
 st.set_page_config(
-    page_title='CNN: Alphabet and Number Recognition',
+    page_title='Train EMNIST with Keras',
     page_icon='🧠'
 )
 
