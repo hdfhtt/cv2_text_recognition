@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot
 import streamlit as st
+import random
 
 
 st.set_page_config(
@@ -10,10 +11,15 @@ st.set_page_config(
 )
 
 
+def random_image():
+    images = [ 'test_image_1.jpg', 'test_image_2.jpg', 'test_image_3.jpg' ]
+    st.session_state.image = random.choice(images)
+    return
+
+
 def main():
     st.write('''
-        ### CSCI 2304 Section 2 Group Project
-        # CNN: Alphabet and Number Recognition
+        # Alphabet and Number Recognition using CNN Model
     ''')
     st.write('''
         ### Step 1: Input Image
@@ -28,16 +34,17 @@ def main():
     with st.expander('B. Use camera to take photo'):
         st.camera_input(error_message, disabled=True)
 
+    st.button('Randomize Sample Image', on_click=random_image)
+
     st.write('''
         ### Step 2: Detect potential text using OpenCV
     ''')
 
     if 'image' not in st.session_state:
-        st.session_state.image = 'test_image.jpg'
+        st.session_state.image = 'test_image_1.jpg'
 
-    st.image('test_image.jpg', 'Selected Image', width=300)
-    image = cv2.imread('test_image.jpg')
-
+    st.image(st.session_state.image, st.session_state.image, width=400)
+    image = cv2.imread(st.session_state.image)
 
     height, width, _ = image.shape
     char_recognized = 0
@@ -73,7 +80,7 @@ def main():
         cv2.rectangle(processed_image, (x - 10, y - 10), ( x + w + 10, y + h + 10 ), color, 10)
         char_recognized += 1
 
-    st.image(processed_image, 'Possible character recognized is ' + str(char_recognized) , width=300)
+    st.image(processed_image, 'Possible character recognized is ' + str(char_recognized) , width=400)
     st.write('Notice that rectangles in red are the potential noises, it is detected if any image is below the setting, which is 24 x 24 px.' \
              ' While, the rectangles in green are the potential characters detected.')
 
