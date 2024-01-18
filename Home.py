@@ -12,8 +12,7 @@ st.set_page_config(
 
 
 def random_image():
-    images = [ 'test_image_1.jpg', 'test_image_2.jpg', 'test_image_3.jpg' ]
-    st.session_state.image = random.choice(images)
+    st.session_state.image = 'test_image_' + str(random.randint(1, 6)) + '.jpg' 
     return
 
 
@@ -22,7 +21,7 @@ def main():
         # Alphabet and Number Recognition using CNN Model
     ''')
     st.write('''
-        ### Step 1: Input Image
+        ### Step 1: Input image
         Please choose either to use uploaded image or to take photo using webcamera.
     ''')
 
@@ -34,10 +33,10 @@ def main():
     with st.expander('B. Use camera to take photo'):
         st.camera_input(error_message, disabled=True)
 
-    st.button('Randomize Sample Image', on_click=random_image)
+    st.button('Randomize Test Image', on_click=random_image)
 
     st.write('''
-        ### Step 2: Detect potential text using OpenCV
+        ### Step 2: Detect any potential characters using OpenCV
     ''')
 
     if 'image' not in st.session_state:
@@ -84,7 +83,7 @@ def main():
     st.write('Notice that rectangles in red are the potential noises, it is detected if any image is below the setting, which is 24 x 24 px.' \
              ' While, the rectangles in green are the potential characters detected.')
 
-    st.write('### Step 3: Remove possible noises')
+    st.write('### Step 3: Remove noises')
 
     character_images = []
     char_recognized = 0
@@ -107,11 +106,11 @@ def main():
     st.write('''
         ### Step 4: Load trained model
         ''')
-    st.file_uploader('Upload the trained model file (model.h5):', type=['png', 'jpg', 'jpeg'])
+    st.file_uploader('Upload the trained model file (model.h5):', type=['h5'])
 
     st.write('''
-        ### Step 5: Compare with the trained model (TODO)
-        This is the stage where to compare each characters detected with the trained EMNIST model.
+        ### Step 5: Compare with the trained model *
+        This is the stage where each characters detected is compared with the trained EMNIST model.
     ''')
 
 
