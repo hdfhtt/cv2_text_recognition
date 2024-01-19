@@ -43,27 +43,37 @@ def main():
         st.session_state.image = 'test_image_1.jpg'
 
     st.image(st.session_state.image, st.session_state.image, width=400)
+
+    # Load the image using OpenCV
     image = cv2.imread(st.session_state.image)
 
+    # Extract image dimensions
     height, width, _ = image.shape
     char_recognized = 0
 
+    # Resize the image for better processing
     image = cv2.resize(image, dsize=(width * 5, height * 4), interpolation=cv2.INTER_CUBIC)
+
+    # Convert image to grayscale for easier segmentation
     gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
 
+    # Apply thresholding to create a binary image
     _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
 
+    # Dilate the image to accentuate character regions
     kernel = np.ones((5,5), np.uint8)
     img_dilation = cv2.dilate(thresh, kernel, iterations=1)
 
-    #adding GaussianBlur
+    # Apply Gaussian blur to reduce noise and smooth edges
     gsblur = cv2.GaussianBlur(img_dilation, (5, 5), 0)
 
-    #find contours
+    # Find contours (potential character regions)
     ctrs, _ = cv2.findContours(gsblur.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    #sort contours
+    # Sort contours from left to right for character recognition
     sorted_ctrs = sorted(ctrs, key=lambda ctr: cv2.boundingRect(ctr)[0])
+
+    # Create a copy of the original image for displaying processed results
     processed_image = image.copy()
 
     for _, ctr in enumerate(sorted_ctrs):
@@ -106,7 +116,17 @@ def main():
     st.write('''
         ### Step 4: Load trained model
         ''')
-    st.file_uploader('Upload the trained model file (model.h5):', type=['h5'])
+    uploaded_model = st.file_uploader('Upload the trained model file (model.h5):', type=['h5'])
+    '''
+    from tensorflow.keras.models import load_model
+
+    if st.session_state.model is None:
+        st.session_state.model = 'model.h5'
+    
+    st.session_state.model = uploaded_model
+
+    model = load_model(st.session_state.model)
+    '''
 
     st.write('''
         ### Step 5: Compare with the trained model *
