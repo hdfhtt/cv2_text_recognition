@@ -117,16 +117,15 @@ def main():
         ### Step 4: Load trained model
         ''')
     uploaded_model = st.file_uploader('Upload the trained model file (model.h5):', type=['h5'])
-    '''
-    from tensorflow.keras.models import load_model
-
-    if st.session_state.model is None:
-        st.session_state.model = 'model.h5'
     
-    st.session_state.model = uploaded_model
-
-    model = load_model(st.session_state.model)
-    '''
+    # from tensorflow.keras.models import load_model
+    #
+    # if st.session_state.model is None:
+    #    st.session_state.model = 'model.h5'
+    #
+    # st.session_state.model = uploaded_model
+    #
+    # model = load_model(st.session_state.model)
 
     st.write('''
         ### Step 5: Compare with the trained model *
